@@ -21,7 +21,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libssl-dev libfl-dev bison flex make bc libncurses-dev libelf-dev python3 python-is-python3 gzip binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi
 
+      - name: Cache Proton Clang Toolchain
+        id: cache-toolchain
+        uses: actions/cache@v4
+        with:
+          path: toolchain
+          key: proton-clang-toolchain-v1
+
       - name: Download Proton Clang Toolchain
+        if: steps.cache-toolchain.outputs.cache-hit != 'true'
         run: |
           git clone --depth=1 https://github.com/kdrag0n/proton-clang.git "$GITHUB_WORKSPACE/toolchain"
 
