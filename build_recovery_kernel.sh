@@ -14,9 +14,11 @@ else
     exit 1
 fi
 
-export CC="${TC_DIR}/bin/clang"
-export CROSS_COMPILE="${TC_DIR}/bin/aarch64-linux-gnu-"
-export CROSS_COMPILE_ARM32="${TC_DIR}/bin/arm-linux-gnueabi-"
+export PATH="${TC_DIR}/bin:$PATH"
+
+export CC="clang"
+export CROSS_COMPILE="aarch64-linux-gnu-"
+export CROSS_COMPILE_ARM32="arm-linux-gnueabi-"
 export CLANG_TRIPLE="aarch64-linux-gnu-"
 export ARCH=arm64
 export SUBARCH=arm64
@@ -37,10 +39,10 @@ echo "=========================================="
 mkdir -p "$OUT_DIR"
 
 echo "==> Configuring $DEFCONFIG..."
-make -C $(pwd) O="$OUT_DIR" ARCH=arm64 CC="$CC" CROSS_COMPILE="$CROSS_COMPILE" CLANG_TRIPLE="$CLANG_TRIPLE" "$DEFCONFIG"
+make -C $(pwd) O="$OUT_DIR" ARCH=arm64 CC="$CC" CROSS_COMPILE="$CROSS_COMPILE" CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32" CLANG_TRIPLE="$CLANG_TRIPLE" "$DEFCONFIG"
 
-echo "==> Compiling kernel..."
-make -C $(pwd) O="$OUT_DIR" ARCH=arm64 CC="$CC" CROSS_COMPILE="$CROSS_COMPILE" CLANG_TRIPLE="$CLANG_TRIPLE" -j$(nproc)
+echo "==> Compiling kernel and DTBs..."
+make -C $(pwd) O="$OUT_DIR" ARCH=arm64 CC="$CC" CROSS_COMPILE="$CROSS_COMPILE" CROSS_COMPILE_ARM32="$CROSS_COMPILE_ARM32" CLANG_TRIPLE="$CLANG_TRIPLE" -j$(nproc) Image dtbs
 
 echo "==> Generating compressed Image.gz..."
 gzip -9 -c "$OUT_DIR/arch/arm64/boot/Image" > "$OUT_DIR/arch/arm64/boot/Image.gz"
