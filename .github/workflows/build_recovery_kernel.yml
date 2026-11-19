@@ -1,0 +1,40 @@
+name: Build Slim Recovery Kernel
+
+on:
+  workflow_dispatch:
+    inputs:
+      defconfig:
+        description: 'Kernel Defconfig to use'
+        required: true
+        default: 'a31_recovery_defconfig'
+
+jobs:
+  build:
+    name: Compile Recovery Kernel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Kernel Source
+        uses: actions/checkout@v4
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev libfl-dev bison flex make bc libncurses5-dev python2 python3 gzip
+
+      - name: Download Proton Clang Toolchain
+        run: |
+          git clone --depth=1 https://github.com/kdrag0n/proton-clang.git "$GITHUB_WORKSPACE/toolchain"
+
+      - name: Compile Kernel
+        run: |
+          chmod +x build_recovery_kernel.sh
+          ./build_recovery_kernel.sh ${{ github.event.inputs.defconfig }}
+
+      - name: Upload Kernel Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: A31-Slim-Kernel-${{ github.event.inputs.defconfig }}
+          path: |
+            out/arch/arm64/boot/Image.gz
+            out/arch/arm64/boot/Image
+            out/arch/arm64/boot/dts/mediatek/mt6768.dtb
