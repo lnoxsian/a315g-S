@@ -7,14 +7,6 @@ on:
         description: 'Kernel Defconfig to use'
         required: true
         default: 'a31_recovery_defconfig'
-  push:
-    branches:
-      - main
-    paths:
-      - 'arch/arm64/configs/a31_recovery_defconfig'
-      - 'build_recovery_kernel.sh'
-      - '.github/workflows/build_recovery_kernel.yml'
-      - 'Makefile'
 
 jobs:
   build:
