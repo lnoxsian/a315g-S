@@ -313,7 +313,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
 ARCH            ?= arm64
 # CROSS_COMPILE   ?= $(srctree)/toolchain/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-androidkernel-
 
-CROSS_COMPILE=/home/grahame/toolchains/Topser2/aarch64-linux-android-4.9/bin/aarch64-linux-androidkernel-
+CROSS_COMPILE ?= aarch64-linux-androidkernel-
 
 
 # Architecture as present in compile.h
@@ -378,7 +378,7 @@ LD		= $(CROSS_COMPILE)ld
 LDGOLD		= $(CROSS_COMPILE)ld.gold
 # CC		= $(srctree)/toolchain/clang/host/linux-x86/clang-r383902/bin/clang
 
-CC=/home/grahame/toolchains/proton-clang-13-clang/bin/clang
+CC ?= clang
 
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
@@ -490,7 +490,7 @@ ifeq ($(cc-name),clang)
 ifneq ($(CROSS_COMPILE),)
 # CLANG_TRIPLE	?= $(srctree)/toolchain/clang/host/linux-x86/clang-r383902/bin/aarch64-linux-gnu-
 
-CLANG_TRIPLE=/home/grahame/toolchains/proton-clang-13-clang/bin/aarch64-linux-gnu-
+CLANG_TRIPLE ?= aarch64-linux-gnu-
 
 
 CLANG_FLAGS	+= --target=$(notdir $(CLANG_TRIPLE:%-=%))

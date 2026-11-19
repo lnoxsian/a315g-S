@@ -37,10 +37,10 @@ echo "=========================================="
 mkdir -p "$OUT_DIR"
 
 echo "==> Configuring $DEFCONFIG..."
-make -C $(pwd) O="$OUT_DIR" "$DEFCONFIG"
+make -C $(pwd) O="$OUT_DIR" ARCH=arm64 CC="$CC" CROSS_COMPILE="$CROSS_COMPILE" CLANG_TRIPLE="$CLANG_TRIPLE" "$DEFCONFIG"
 
 echo "==> Compiling kernel..."
-make -C $(pwd) O="$OUT_DIR" -j$(nproc)
+make -C $(pwd) O="$OUT_DIR" ARCH=arm64 CC="$CC" CROSS_COMPILE="$CROSS_COMPILE" CLANG_TRIPLE="$CLANG_TRIPLE" -j$(nproc)
 
 echo "==> Generating compressed Image.gz..."
 gzip -9 -c "$OUT_DIR/arch/arm64/boot/Image" > "$OUT_DIR/arch/arm64/boot/Image.gz"
