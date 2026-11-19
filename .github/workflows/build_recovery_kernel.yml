@@ -7,6 +7,14 @@ on:
         description: 'Kernel Defconfig to use'
         required: true
         default: 'a31_recovery_defconfig'
+  push:
+    branches:
+      - main
+    paths:
+      - 'arch/arm64/configs/a31_recovery_defconfig'
+      - 'build_recovery_kernel.sh'
+      - '.github/workflows/build_recovery_kernel.yml'
+      - 'Makefile'
 
 jobs:
   build:
@@ -28,12 +36,12 @@ jobs:
       - name: Compile Kernel
         run: |
           chmod +x build_recovery_kernel.sh
-          ./build_recovery_kernel.sh ${{ github.event.inputs.defconfig }}
+          ./build_recovery_kernel.sh ${{ github.event.inputs.defconfig || 'a31_recovery_defconfig' }}
 
       - name: Upload Kernel Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: A31-Slim-Kernel-${{ github.event.inputs.defconfig }}
+          name: A31-Slim-Kernel-${{ github.event.inputs.defconfig || 'a31_recovery_defconfig' }}
           path: |
             out/arch/arm64/boot/Image.gz
             out/arch/arm64/boot/Image
